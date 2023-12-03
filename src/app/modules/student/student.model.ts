@@ -1,6 +1,5 @@
 import { Schema, model } from 'mongoose';
 import {
-  StudentMethods,
   StudentModel,
   TGuardian,
   TLocalGuardian,
@@ -80,6 +79,12 @@ const studentSchema = new Schema<TStudent, StudentModel>(
       required: [true, 'Student ID is required'],
       unique: true,
     },
+    user: {
+      type: Schema.Types.ObjectId,
+      required: [true, 'User ID is required'],
+      unique: true,
+      ref: 'User',
+    },
     password: {
       type: String,
       required: [true, 'Password is required'],
@@ -141,14 +146,6 @@ const studentSchema = new Schema<TStudent, StudentModel>(
       required: [true, 'Local guardian information is required'],
     },
     profileImg: { type: String },
-
-    // Using required with a custom error message for the isActive field
-    isActive: {
-      type: String,
-      enum: ['active', 'block'],
-      default: 'active',
-      required: [true, 'isActive status is required'],
-    },
     isDeleted: {
       type: Boolean,
       default: false,
