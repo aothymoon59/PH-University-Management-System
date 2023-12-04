@@ -7,8 +7,6 @@ import {
   TUserName,
 } from './student.interface';
 import validator from 'validator';
-import bcrypt from 'bcrypt';
-import config from '../../config';
 
 const useNameSchema = new Schema<TUserName>({
   firstName: {
@@ -85,11 +83,6 @@ const studentSchema = new Schema<TStudent, StudentModel>(
       unique: true,
       ref: 'User',
     },
-    password: {
-      type: String,
-      required: [true, 'Password is required'],
-      maxlength: [20, 'Password can not be more than 20 characters'],
-    },
     name: {
       type: useNameSchema,
       required: [true, 'Student name is required'],
@@ -113,11 +106,7 @@ const studentSchema = new Schema<TStudent, StudentModel>(
         message: '{VALUE} must be a valid email address',
       },
     },
-
-    // Using required with a custom error message for the contactNo field
     contactNo: { type: String, required: [true, 'Contact number is required'] },
-
-    // Using required with a custom error message for the emergencyContactNo field
     emergencyContactNo: {
       type: String,
       required: [true, 'Emergency contact number is required'],
@@ -163,26 +152,6 @@ studentSchema.virtual('fullName').get(function () {
   return `${this.name.firstName} ${this.name.middleName} ${this.name.lastName}`;
 });
 
-// pre save middleware / hook: will work on create() save()
-studentSchema.pre('save', async function (next) {
-  // eslint-disable-next-line @typescript-eslint/no-this-alias
-  const user = this; //doc
-  //hashing password and save into DB
-  user.password = await bcrypt.hash(
-    user.password,
-    Number(config.bcrypt_salt_rounds),
-  );
-  next();
-});
-
-// post save middleware/hook
-studentSchema.post('save', function (doc, next) {
-  if (doc.password) {
-    doc.password = '';
-  }
-  next();
-});
-
 //query middleware
 studentSchema.pre('find', function (next) {
   this.find({ isDeleted: { $ne: true } });
@@ -205,12 +174,5 @@ studentSchema.statics.isUserExists = async function ({ id: string }) {
 
   return existingUser;
 };
-
-// creating a custom instance method
-// studentSchema.methods.isUserExists = async function (id: string) {
-//   const existingUser = await Student.findOne({ id });
-
-//   return existingUser;
-// };
 
 export const Student = model<TStudent, StudentModel>('Student', studentSchema);
