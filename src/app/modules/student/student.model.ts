@@ -95,7 +95,7 @@ const studentSchema = new Schema<TStudent, StudentModel>(
         message: '{VALUE} is not a valid gender',
       },
     },
-    dateOfBirth: { type: String },
+    dateOfBirth: { type: Date },
     // Using required with a custom error message for the email field
     email: {
       type: String,
