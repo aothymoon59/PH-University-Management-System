@@ -13,9 +13,21 @@ router.post(
   AcademicSemesterControllers.createAcademicSemester,
 );
 
-// will call controller func
+router.get('/', AcademicSemesterControllers.getAllAcademicSemesters);
 
-// router.get('/', StudentControllers.getAllStudents);
+router.get(
+  '/:semesterId',
+  AcademicSemesterControllers.getSingleAcademicSemester,
+);
+
+router.patch(
+  '/:semesterId',
+  validateRequest(
+    AcademicSemesterValidations.updateAcademicSemesterValidationSchema,
+  ),
+  AcademicSemesterControllers.updateAcademicSemester,
+);
+
 // router.get('/:studentId', StudentControllers.getSingleStudent);
 
 // router.delete('/:studentId', StudentControllers.deleteStudent);
