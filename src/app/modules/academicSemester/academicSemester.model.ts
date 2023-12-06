@@ -1,4 +1,3 @@
-import { AcademicSemester } from './academicSemester.model';
 import { Schema, model } from 'mongoose';
 import { TAcademicSemester } from './academicSemester.interface';
 import {
