@@ -8,6 +8,7 @@ const userSchema = new Schema<TUser>(
     id: {
       type: String,
       required: true,
+      unique: true,
     },
     password: {
       type: String,
@@ -55,4 +56,4 @@ userSchema.post('save', function (doc, next) {
   next();
 });
 
-export const UserModel = model<TUser>('User', userSchema);
+export const User = model<TUser>('User', userSchema);
