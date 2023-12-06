@@ -13,9 +13,8 @@ router.post(
   AcademicSemesterControllers.createAcademicSemester,
 );
 
-// will call controller func
+router.get('/', AcademicSemesterControllers.getAcademicSemester);
 
-// router.get('/', StudentControllers.getAllStudents);
 // router.get('/:studentId', StudentControllers.getSingleStudent);
 
 // router.delete('/:studentId', StudentControllers.deleteStudent);
