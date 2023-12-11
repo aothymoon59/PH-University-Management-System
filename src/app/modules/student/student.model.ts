@@ -96,7 +96,6 @@ const studentSchema = new Schema<TStudent, StudentModel>(
       },
     },
     dateOfBirth: { type: Date },
-    // Using required with a custom error message for the email field
     email: {
       type: String,
       required: [true, 'Email address is required'],
