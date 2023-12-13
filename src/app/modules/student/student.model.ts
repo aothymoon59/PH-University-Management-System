@@ -96,7 +96,6 @@ const studentSchema = new Schema<TStudent, StudentModel>(
       },
     },
     dateOfBirth: { type: Date },
-    // Using required with a custom error message for the email field
     email: {
       type: String,
       required: [true, 'Email address is required'],
@@ -157,7 +156,7 @@ const studentSchema = new Schema<TStudent, StudentModel>(
 
 // virtual
 studentSchema.virtual('fullName').get(function () {
-  return `${this.name.firstName} ${this.name.middleName} ${this.name.lastName}`;
+  return this?.name?.firstName + this?.name?.middleName + this?.name?.lastName;
 });
 
 //query middleware
