@@ -62,7 +62,10 @@ if (!fs.existsSync(uploadDirectory)) {
 }
 
 // Handle errors in sendImageToCloudinary function
-export const sendImageToCloudinary = (imageName: string, path: string) => {
+export const sendImageToCloudinary = (
+  imageName: string,
+  path: string,
+): Promise<Record<string, unknown>> => {
   return new Promise((resolve, reject) => {
     cloudinary.uploader.upload(
       path,
