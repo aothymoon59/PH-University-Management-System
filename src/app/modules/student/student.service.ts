@@ -8,70 +8,11 @@ import { studentSearchableFields } from './student.constant';
 import QueryBuilder from '../../builder/QueryBuilder';
 
 const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
-  // const queryObj = { ...query }; //copy
-  // search formate
-  //{email:{$regex: query.searchTerm, $options: i}}
-
-  // let searchTerm = '';
-  // if (query?.searchTerm) {
-  //   searchTerm = query?.searchTerm as string;
-  // }
-  // const searchQuery = Student.find({
-  //   $or: studentSearchableFields.map((field) => ({
-  //     [field]: { $regex: searchTerm, $options: 'i' },
-  //   })),
-  // });
-  // Filtering
-  // const excludeFields = ['searchTerm', 'sort', 'limit', 'page', 'fields'];
-  // excludeFields.forEach((el) => delete queryObj[el]);
-  // const filterQuery = searchQuery
-  //   .find(queryObj)
-  //   .populate('admissionSemester')
-  //   .populate({
-  //     path: 'academicDepartment',
-  //     populate: {
-  //       path: 'academicFaculty',
-  //     },
-  //   });
-  // let sort = '-createdAt';
-  // if (query.sort) {
-  //   sort = query.sort as string;
-  // }
-  // const sortQuery = filterQuery.sort(sort);
-  // let page = 1;
-  // let limit = 1;
-  // let skip = 0;
-  // if (query.limit) {
-  //   limit = Number(query.limit);
-  // }
-  // if (query.page) {
-  //   page = Number(query.page);
-  //   skip = (page - 1) * limit;
-  // }
-  // const paginateQuery = sortQuery.skip(skip);
-  // const limitQuery = paginateQuery.limit(limit);
-  //  FIELDS LIMITING FUNCTIONALITY:
-  // HOW OUR FORMAT SHOULD BE FOR PARTIAL MATCH
-  //fields: 'name,email'; // WE ARE ACCEPTING FROM REQUEST
-  // fields: 'name email'; // HOW IT SHOULD BE
-  // let fields = '-__v'; // SET DEFAULT VALUE
-  // if (query.fields) {
-  //   fields = (query.fields as string).split(',').join(' ');
-  //   console.log({ fields });
-  // }
-  // const fieldQuery = await limitQuery.select(fields);
-  // return fieldQuery;
-
   const studentQuery = new QueryBuilder(
     Student.find()
       .populate('user')
       .populate('admissionSemester')
-      .populate({
-        path: 'academicDepartment',
-        populate: {
-          path: 'academicFaculty',
-        },
-      }),
+      .populate('academicDepartment academicFaculty'),
     query,
   )
     .search(studentSearchableFields)
@@ -80,15 +21,14 @@ const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
     .paginate()
     .fields();
 
-  const result = await studentQuery.modelQuery;
   const meta = await studentQuery.countTotal();
+  const result = await studentQuery.modelQuery;
 
   return {
     meta,
     result,
   };
 };
-
 const getSingleStudentFromDB = async (id: string) => {
   // const result = await Student.aggregate([{ $match: { id: id } }]);
   const result = await Student.findById(id)
