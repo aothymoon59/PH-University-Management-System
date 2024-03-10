@@ -44,7 +44,7 @@
 
 // export const upload = multer({ storage: storage });
 
-import { v2 as cloudinary } from 'cloudinary';
+import { UploadApiResponse, v2 as cloudinary } from 'cloudinary';
 import fs from 'fs';
 import multer from 'multer';
 import config from '../config';
@@ -74,7 +74,7 @@ export const sendImageToCloudinary = (
         if (error) {
           reject(error);
         } else {
-          resolve(result);
+          resolve(result as UploadApiResponse);
         }
 
         // Always delete the file after attempting to upload to Cloudinary
